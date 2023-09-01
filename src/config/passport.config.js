@@ -3,10 +3,11 @@ import passport from "passport";
 import local from "passport-local";
 import GithubStrategy from "passport-github2";
 import UserDao from "../DAO/UserDao.js";
-import { isValidPassword, createHash, cookieExtrator } from "../Utils/utils.js";
+import { isValidPassword, createHash, cookieExtrator } from "../utils/utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
 import CartDao from "../DAO/CartDao.js"
+import { logger } from "../utils/logger.js";
 
 const cartManager = new CartDao();
 const LocalStrategy = local.Strategy;
@@ -23,13 +24,13 @@ passport.use("register", new LocalStrategy(
             let userFound = await userDao.getByEmail(user.email); //Valido si el mail, existe en la DB
             if(userFound){
                 //Si existe en la DB, devuelvo un error avisando que ya existe.
-                console.log("User already exists");
+                req.logger.warning("User already exists");
                 return done(null,false);
             }else{
                 //Si no existe, creo el usuario y redirijo a Login
                 user.password = createHash(password)
                 let result = await userDao.createUser(user)
-                console.log(result);
+                req.logger.info(result);
                 return done(null, result);
             }
         } catch (error) {
@@ -65,7 +66,7 @@ passport.use("register", new LocalStrategy(
         scope:[config.GITHUB_SCOPE]
     }, async (accessToken,refreshToken,profile,done)=>{
         try {
-            console.log(profile); //Muestro toda la info que llega del perfil
+            logger.info(JSON.stringify(profile, null, 2)); //Muestro toda la info que llega del perfil
             let userMail = profile.emails[0].value;
             let user = await userDao.getByEmail(userMail)
             let cart = await cartManager.addCarts();
@@ -99,10 +100,10 @@ passport.use("register", new LocalStrategy(
         secretOrKey: config.JWT_PRIVATE_KEY,
     }, async (jwt_payload, done) => {
         try {
-            console.log("Token verificado correctamente", jwt_payload);
+            logger.info("Token verificado correctamente", jwt_payload);
             return done(null, jwt_payload);
         } catch (error) {
-            console.error("Error al verificar el token:", error);
+            logger.error("Error al verificar el token:", error);
             return done(error);
         }
     }))

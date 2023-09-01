@@ -3,7 +3,7 @@ import EErrors from "../../services/errors/enums.js";
 
 export default (error, req, res, next) => {
     error.stack = '';
-    console.error(error.cause); // Registra el error en la consola si es necesario
+    req.logger.error(error.cause); // Registra el error en la consola si es necesario
 
     switch (error.code) {
         case EErrors.INVALID_TYPES:

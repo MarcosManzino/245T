@@ -56,7 +56,7 @@ const crtl_PUT_ProductId = async (req, res) => {
         let campos = req.body;
         res.send(await productDao.updateProduct(id, campos));
     } catch (error) {
-        console.log(error);
+        req.logger.error(error);
     }
 };
 
@@ -65,7 +65,7 @@ const crtl_DEL_ProductId = async (req, res) => {
         let id = req.params.pid;
         res.send(await productDao.deleteProduct(id));
     } catch (error) {
-        console.log(error);
+        req.logger.error(error);
     }
 };
 

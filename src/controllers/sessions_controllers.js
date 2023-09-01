@@ -61,7 +61,7 @@ const crtl_GET_Githubcallback = async(req,res)=>{
 
 const crtl_GET_Profile = async (req, res) => {
     let user = await userDao.getByEmail(req.session.user);
-    res.render('profile', {user:JSON.parse(JSON.stringify(user)), style: "profile.css"});
+    res.render('profile', {user:JSON.parsconsole.loge(JSON.stringify(user)), style: "profile.css"});
 };
 
 const crtl_GET_Logout = async (req, res) => {
@@ -77,7 +77,7 @@ const crtl_GET_Logout = async (req, res) => {
 
 const crtl_GET_Current = async (req, res) => {
     let user = new UserDTO(await userDao.getByEmail(req.user.email))
-    console.log(user);
+    req.logger.info(user);
     res.render('current', { user: user, message: "Ingresamos mediante Passport-jwt" });
 };
 

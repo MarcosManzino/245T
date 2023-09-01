@@ -6,6 +6,7 @@ import { generateProducts } from "../services/mocks/productsFaker.js";
 const cartDao = new CartDao();
 
 const ctrl_Home = (req, res) => {
+    
     res.render("login", {style:"login.css"});
 };
 
@@ -78,7 +79,7 @@ try {
     const cart = await cartDao.getCartsById(id);
     res.render("cart", { cart: JSON.parse(JSON.stringify(cart[0])), user: user, style: "cart.css"});
 } catch (error) {
-    console.log(error);
+    req.logger.error(error);
 }
 }
 
@@ -88,9 +89,27 @@ const ctrl_MockingProducts = async (req, res) => {
         
         res.render("mockingProducts", {products})
     } catch (error) {
-        console.log(error);
+        req.logger.error(error);
     }
 }
 
-export {ctrl_Home, ctrl_Cart, ctrl_Chat, ctrl_Products, ctrl_RealtimeProducts, ctrl_MockingProducts};
+const ctrl_LoggerTest = async (req, res) => {
+    try {
+        //Fuerzo un log de cada estilo, para cumplir con la consigna de la clase
+        req.logger.fatal("Prueba de fatal")
+        req.logger.error("Prueba de Error")
+        req.logger.warning("Prueba Warning")
+        req.logger.info("Prueba de Info")
+        req.logger.http("Prueba de http")
+        req.logger.debug("Prueba de debug")
+        
+        res.render('LoggerTest', { logger: req.logger }); //También genero un entorno gráfico para hacerlo más visual
+    } catch (error) {
+        req.logger.error(error);
+    }
+}
+
+
+
+export {ctrl_Home, ctrl_Cart, ctrl_Chat, ctrl_Products, ctrl_RealtimeProducts, ctrl_MockingProducts, ctrl_LoggerTest};
 

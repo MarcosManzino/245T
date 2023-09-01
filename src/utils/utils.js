@@ -2,6 +2,7 @@
 import bcrypt from "bcrypt";
 import config from "../config/config.js";
 
+
 //Utilizo bcrypt para encriptar el password que se almacenará en DB
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
@@ -14,6 +15,6 @@ export const cookieExtrator = req => {
     if (req && req.cookies) {
         token = req.cookies[config.AUTH_TOKEN];
     }
-    console.log("Token extraído:", token); // Agrega este registro
+    req.logger.info(`Token extraído: ${token}`)
     return token;
 };

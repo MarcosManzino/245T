@@ -17,17 +17,18 @@ import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 import errorHandler from "./middlewares/errors/errors.js"
+import { addLogger, logger } from "./utils/logger.js";
 
 
 const app = express(); //Inicializo el modulo express y estará contenido en app
 const PORT = config.PORT || 8081;
-const server = app.listen(PORT, () => console.log(`Servidor escuchando puerto ${server.address().port}`));
-server.on("error", error => console.log(error))
+const server = app.listen(PORT, () => logger.info(`Servidor escuchando puerto ${server.address().port}`));
+server.on("error", error => logger.error(error))
 const socketServer = new Server(server); //SocketServer será un servidor para trabajar con sockets
 
 mongoose.connect(config.MONGO_URL)
     .then(() => console.log('Database connected'))
-    .catch(err => console.log(err))
+    .catch(err => logger.error(err))
 
 app.use(session({
     store:MongoStore.create({
@@ -41,6 +42,7 @@ app.use(session({
 }))
 
 initializePassport();//Inicializo Passport
+app.use(addLogger) //Aplico el middleware que generé para el Logger
 app.use(passport.initialize());//Inicializo Passport
 app.use(passport.session());//Inicializo Passport Session
 app.use(cookieParser()); //Inicializo cookieParser
@@ -65,7 +67,7 @@ app.use(errorHandler); //Importo el middleware que generé para el manejo de err
 //Comienzo a escuchar la conección de un socket
 socketServer.on(`connection`, async (socket) => {
     //Muestro por log que se conectó un nuevo cliente
-    console.log("Nuevo Cliente Conectado");
+    logger.info("Nuevo Cliente Conectado");
     //Enviío la lista de productos al socket conectado
         let products = await manager.getProducts();
         socket.emit("listaProductos",  {
@@ -74,7 +76,7 @@ socketServer.on(`connection`, async (socket) => {
 
     //Comienzo a escuchar el socket, para crear un producto
     socket.on("crearProducto", async (data) => {
-        console.log(data);
+        logger.info(data);
         //Luego lo envío a la función addProducts, la data recibida del socket
         await manager.addProduct( data.title, data.description, data.code, data.price, data.stock, data.category, data.thumbnail)
     })
@@ -110,7 +112,7 @@ socketServer.on(`connection`, async (socket) => {
             const addPorduct = await cartDao.addProductToCart(cid,pid)
             socket.emit("productAdd-confirm", addPorduct)
             } catch (error) {
-                console.log(error);
+                logger.error(error);
                 socket.emit("productAdd-error", { message: error.message });
             }
     })
@@ -121,7 +123,7 @@ socketServer.on(`connection`, async (socket) => {
             const deleteProductFromCart = await cartDao.removeProductFromCart(cid,pid)
             socket.emit("deleteProductFromCart-confirm", deleteProductFromCart)
             } catch (error) {
-                console.log(error);
+                logger.error(error);
                 socket.emit("deleteProductFromCart-error", { message: error.message });
             }
     })

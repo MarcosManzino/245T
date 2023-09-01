@@ -12,7 +12,7 @@ export const generateAuthToken = (user) => {
 
 export const authToken = (req, res, next) => {
     const authHeaders = req.headers.Authorization ? req.headers.Authorization : req.headers.authorization;
-    console.log(authHeaders);
+    req.logger.info(authHeaders);
     if (!authHeaders) return res.status(401).send ({error: "Not authorized"}) //Si no hay headers, es porque no hay token y por lo tanto no está autenticado
     const token = authHeaders.split(" ")[1]; //Se hace un split para retirar la palabra "Bearer"
     jwt.verify(token, JWT_PRIVATE_KEY, (error, credentials) => {

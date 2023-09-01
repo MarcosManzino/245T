@@ -1,6 +1,7 @@
 /* UserDao.js */
-import {usersModel} from "./model/users.model.js"
-import CartDao from "./CartDao.js"
+import {usersModel} from "./model/users.model.js";
+import CartDao from "./CartDao.js";
+import { logger } from "../utils/logger.js";
 
 const cartManager = new CartDao();
 
@@ -15,7 +16,7 @@ class UserDao{
           let result = await usersModel.findOne({ email: email });
           return result;
         } catch (error) {
-          console.error(`Error al buscar el usuario con el correo: ${email}`);
+          logger.warning(`Error al buscar el usuario con el correo: ${email}`);
           return null;
         }
       }
@@ -23,7 +24,7 @@ class UserDao{
 async createUser (user) {
     try {
       let cart = await cartManager.addCarts();
-      console.log("LOG DE CART"+cart);
+      logger.info("LOG DE CART"+cart);
       let newUser = {
         first_name: user.first_name, // Tomar el nombre del usuario del cuerpo de la solicitud
         last_name: user.last_name, // Tomar el apellido del usuario del cuerpo de la solicitud
@@ -44,7 +45,7 @@ async getById(email) {
       let result = await usersModel.findOne({ email});
       return result; 
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   }

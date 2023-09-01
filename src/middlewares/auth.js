@@ -10,7 +10,7 @@ const userDao = new UserDao();
     if (!req.session.user) {
       next();
     } else {
-      console.log("Fallo Auth");
+      req.logger.warning("Fallo Auth");
       res.render('profile', {style:"login.css", message:'Debe desloguear la sesión actual para volver a ingresar al Login o Register'})
       return;
     }
@@ -21,7 +21,7 @@ const userDao = new UserDao();
     if (req.session.user) {
       next();
     } else {
-      console.log("Fallo Auth");
+      req.logger.warning("Fallo Auth");
       req.session.destroy();
       res.render('login', {style:"login.css",  message:'Debe Loguearse primero!'})
       return;

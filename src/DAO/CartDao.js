@@ -1,5 +1,6 @@
 import { cartsModel } from "./model/carts.model.js";
-import ProductDao from "./ProductDao.js"
+import ProductDao from "./ProductDao.js";
+import { logger } from "../utils/logger.js";
 
 const manager = new ProductDao();
 
@@ -15,7 +16,7 @@ async getCarts(){
         let carts = await cartsModel.find();
         return carts;
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 
@@ -42,7 +43,7 @@ async addCarts(){
         })
         return cart
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
     return{status:"Existoso", msg:`Se agregó el carrito con ID: ${cart.id}`};
 }
@@ -130,16 +131,16 @@ async updateCart(cid, productsToKeep) {
         cart.cart = updatedCart;
         await cart.save();
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 
   // Actualizar la cantidad  de un producto en el carrito
 async updateProductQuantity(cid, pid, quantity) {
     try {
-        console.log("ID" + cid);
-        console.log("PID" + pid);
-        console.log("cant" + quantity);
+        logger.info("ID" + cid);
+        logger.info("PID" + pid);
+        logger.info("cant" + quantity);
     const cart = await cartsModel.findOne({ _id: cid });
     if (!cart) {
         throw new Error("El carrito no existe");
@@ -154,7 +155,7 @@ async updateProductQuantity(cid, pid, quantity) {
         { $set: { "cart.$.quantity": quantity } } // Actualiza la cantidad del producto en la base de datos
     );
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     }
 }
 
@@ -167,9 +168,9 @@ async deleteCart(cid) {
     }
     cart.cart = [];
     await cart.save();
-    console.log("Productos eliminados del carrito exitosamente");
+    logger.info("Productos eliminados del carrito exitosamente");
     } catch (error) {
-    console.log(error);
+    logger.info(error);
     }
 }
 

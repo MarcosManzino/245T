@@ -20,5 +20,6 @@ export default {
     COLLECTION_PRODUCTS: process.env.COLLECTION_PRODUCTS,
     COLLECTION_USERS: process.env.COLLECTION_USERS,
     COLLECTION_TICKETS: process.env.COLLECTION_TICKETS,
-    AUTH_TOKEN: process.env.AUTH_TOKEN
+    AUTH_TOKEN: process.env.AUTH_TOKEN,
+    ENVIROMENT: process.env.ENVIROMENT
 }

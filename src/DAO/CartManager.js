@@ -1,5 +1,6 @@
 import fs from "fs"
 import ProductManager from "./ProductManager.js";
+import { logger } from "../utils/logger.js";
 
 const manager = new ProductManager();
 
@@ -21,7 +22,7 @@ async readCarts(){
         let carts = await fs.promises.readFile(this.path, "utf-8")
         return JSON.parse(carts) //Los devuelvo como objeto
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 
@@ -31,7 +32,7 @@ async getCarts(){
         let carts = await this.readCarts();
         return carts;
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 
@@ -47,7 +48,7 @@ async getCartsById(id){
             return "Cart Not Found"
         }
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 

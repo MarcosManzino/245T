@@ -1,5 +1,6 @@
 /* ProductDao.js */
 import { productsModel } from "./model/products.model.js";
+import { logger } from "../utils/logger.js";
 
 class ProductDao{
     
@@ -12,7 +13,7 @@ class ProductDao{
             let productos = await productsModel.find() //Busco la lista
             return productos
         } catch (error) {
-            console.log(error);
+            logger.error(error);
             }  
     }
 
@@ -21,13 +22,13 @@ class ProductDao{
             let productos = await productsModel.findOne({_id: id}) //Busco el ID
             return productos
         } catch (error) {
-            console.log(`Error con el ${id}, no existe`);
+            logger.error(`Error con el ${id}, no existe`);
             }  
     }
 
     async deleteProduct (id){
         try {
-            console.log(id);
+            logger.info(`El id del producto a eliminar es ${id}`);
             await productsModel.deleteOne({_id: id}); //Busco la lista
             return {status:"Success", msg:`Su product ID: ${id}, fue eliminado`}
         } catch (error) {
@@ -40,7 +41,7 @@ class ProductDao{
         try {
             product = await productsModel.updateOne({_id: id}, campos);
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
         return product;
     }
@@ -59,7 +60,7 @@ class ProductDao{
                 thumbnail: Array.isArray(thumbnail) ? thumbnail : [thumbnail] 
             })
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
         return product;
     }

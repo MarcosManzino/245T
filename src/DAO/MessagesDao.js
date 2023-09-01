@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger.js";
 import {messagesModel} from "./model/messages.model.js"
 
 class MessagesDao{
@@ -11,7 +12,7 @@ class MessagesDao{
             let messages = await messagesModel.find();
             return messages
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 
@@ -23,7 +24,7 @@ class MessagesDao{
                 message
             })
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
         return messages
     }

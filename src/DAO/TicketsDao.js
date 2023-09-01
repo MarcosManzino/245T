@@ -1,6 +1,7 @@
 /* TicketsDao.js */
-import {ticketsModel} from "./model/ticket.model.js"
-import crypto from "node:crypto"
+import {ticketsModel} from "./model/ticket.model.js";
+import crypto from "node:crypto";
+import { logger } from "../utils/logger.js";
 
 class TicketDao{
 
@@ -13,7 +14,7 @@ class TicketDao{
             let tickets = await ticketsModel.find()
             return tickets
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 
@@ -22,13 +23,13 @@ class TicketDao{
             let ticket = await ticketsModel.findOne({_id: id}) //Busco el ID
             return ticket
         } catch (error) {
-            console.log(`Error con el ${id}, no existe`);
+            logger.info(`Error con el ${id}, no existe`);
             }  
     }
 
     async deleteTicket (id){
         try {
-            console.log(id);
+            logger.info(`El ID del ticket a eliminar es: ${id}`);
             await ticketsModel.deleteOne({_id: id}); //Busco la lista
             return {status:"Success", msg:`Su ticket ID: ${id}, fue eliminado`}
         } catch (error) {

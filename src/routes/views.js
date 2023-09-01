@@ -1,7 +1,6 @@
 /* route views.js */
 import { Router } from "express";
-import CartDao from "../DAO/CartDao.js"
-import passport from "passport";
+import CartDao from "../DAO/CartDao.js";
 import {authLogin} from "../middlewares/auth.js"
 import { authUser } from "../middlewares/auth.js";
 import {
@@ -10,7 +9,8 @@ import {
     ctrl_Chat, 
     ctrl_Products, 
     ctrl_RealtimeProducts,
-    ctrl_MockingProducts
+    ctrl_MockingProducts,
+    ctrl_LoggerTest
 } from "../controllers/views_controllers.js"
 
 
@@ -41,6 +41,10 @@ views.get(`/carts/:cid`, authLogin, ctrl_Cart)
 
 //Genero una vista para la clase 32, que genere 100 productos con Mocking
 views.get(`/mockingproducts`, ctrl_MockingProducts);
+
+//Genero una vista para la clase 32 que permita ver la configuración de logger actual
+views.get(`/loggerTest`, ctrl_LoggerTest);
+
 
 
 export default views;

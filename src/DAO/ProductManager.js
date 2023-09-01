@@ -1,4 +1,5 @@
 import fs from "fs"
+import { logger } from "../utils/logger.js";
 
 class ProductManager{
 
@@ -15,7 +16,7 @@ class ProductManager{
         let resultado = productos.length + 1;
         return resultado
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 
@@ -25,7 +26,7 @@ class ProductManager{
             let productos = await fs.promises.readFile(this.path, "utf-8"); //Busco la lista de productos
             return JSON.parse(productos); //Los convierto a objeto
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 
@@ -34,7 +35,7 @@ class ProductManager{
             let productos = await this.readProducts() //Busco la lista
             return productos //La devuevlo por consola
         } catch (error) {
-            console.log(error);
+            logger.error(error);
             }  
     }
 
@@ -81,7 +82,7 @@ class ProductManager{
                             return{status:"Success", msg:`Se creo: ${nuevoProducto.title}`};
                         }
                 } catch (error) {
-                    console.log(error);
+                    logger.error(error);
                 }
             }
         
@@ -103,7 +104,7 @@ class ProductManager{
             return{status:"Error", msg:`Su ID: ${id}, no existe`};
         }
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 
@@ -121,7 +122,7 @@ class ProductManager{
                 return{status:"Error", msg:`Su product ID: ${id}, no existe`};
             }
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     }
 }
